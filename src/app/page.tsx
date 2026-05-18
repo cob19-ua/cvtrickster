@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { CVUpload } from "@/components/CVUpload";
 import { JobOfferInput } from "@/components/JobOfferInput";
+import { AdaptedCVEditor } from "@/components/AdaptedCVEditor";
 
 export default function Home() {
   const [cvText, setCvText] = useState<string | null>(null);
   const [jobText, setJobText] = useState<string | null>(null);
   const [adaptedCv, setAdaptedCv] = useState<string | null>(null);
+  const [editedCv, setEditedCv] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -33,6 +35,7 @@ export default function Home() {
 
     setStatus("idle");
     setAdaptedCv(data.adaptedCv);
+    setEditedCv(data.adaptedCv);
   }
 
   return (
@@ -59,10 +62,12 @@ export default function Home() {
         </button>
       </div>
 
-      {adaptedCv && (
+      {adaptedCv && editedCv !== null && (
         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Adapted CV</h2>
-          <pre className="whitespace-pre-wrap font-mono text-sm text-gray-800">{adaptedCv}</pre>
+          <AdaptedCVEditor
+            initialValue={adaptedCv}
+            onChange={setEditedCv}
+          />
         </div>
       )}
     </div>
