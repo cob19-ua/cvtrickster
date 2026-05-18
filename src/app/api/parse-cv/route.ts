@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-// pdf-parse v2 ESM has no default export — require is the safe path on Node runtime
+type PdfParseResult = { text: string };
+type PdfParseFn = (buf: Buffer) => Promise<PdfParseResult>;
+// Use the Node.js-specific build; unwrap CJS default if needed
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>;
+const _pdfMod = require("pdf-parse/node");
+const pdfParse: PdfParseFn = typeof _pdfMod === "function" ? _pdfMod : _pdfMod.default;
 import mammoth from "mammoth";
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
